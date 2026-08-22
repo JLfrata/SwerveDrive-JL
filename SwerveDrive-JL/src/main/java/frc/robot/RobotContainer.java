@@ -4,22 +4,21 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
+import yams.mechanisms.swerve.utility.SwerveInputStream;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
-  
+  private PS4Controller controller = new PS4Controller(0);
   private SwerveSubsystem swerve = new SwerveSubsystem();
+  private SwerveInputStream driveAngularVelocity = swerve.driveAngularVelocity(swerve, controller);
   public RobotContainer() {
     configureBindings();
   }
 
   private void configureBindings() {
-
+    swerve.setDefaultCommand(swerve.driveRobotRelative(driveAngularVelocity));
   }
 
   public Command getAutonomousCommand() {

@@ -5,32 +5,18 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Voltage;
-
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
 import java.io.File;
-import java.io.InputStream;
 import java.util.function.DoubleSupplier;
 import swervelib.parser.SwerveParser;
-import swervelib.parser.deserializer.ReflectionsManager.Gyro;
 import yams.mechanisms.config.SwerveDriveConfig;
 import yams.mechanisms.swerve.SwerveDrive;
 import yams.mechanisms.swerve.utility.SwerveInputStream;
@@ -41,9 +27,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -84,7 +68,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public SwerveInputStream driveAngularVelocity(SwerveSubsystem swerve, PS4Controller controller) {
-    swerve.getAngularVelocityStream(
+    return swerve.getAngularVelocityStream(
         () -> -controller.getLeftY(),
         () -> controller.getLeftX(),
         () -> -controller.getRightX())
@@ -154,7 +138,7 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (swerveDrive != null) {
-
+      updateDashboardField();
       SmartDashboard.putNumber("FR CanCoder", getCancoderDegrees(frontright));
       SmartDashboard.putNumber("FL CanCoder", getCancoderDegrees(frontleft));
       SmartDashboard.putNumber("BR CanCoder", getCancoderDegrees(backright));
