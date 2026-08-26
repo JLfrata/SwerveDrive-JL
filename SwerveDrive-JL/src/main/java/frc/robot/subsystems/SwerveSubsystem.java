@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -33,12 +35,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
   File directory = new File(Filesystem.getDeployDirectory(), "swerve");
 
+  private AHRS gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
   private Field2d field = new Field2d();
   private static final Pose2d bluePose = new Pose2d(3.560, 4.035, new Rotation2d(0));
   private static final Pose2d redPose = new Pose2d(12.977, 4.035, new Rotation2d(Math.toRadians(0)));
 
   SwerveDrive swerveDrive;
-  private final ADXRS450_Gyro gyro = new ADXRS450_Gyro();
   CANcoder frontleft = new CANcoder(11);
   CANcoder frontright = new CANcoder(12);
   CANcoder backleft = new CANcoder(14);
