@@ -6,7 +6,7 @@
     "canbus": "rio"
   },
   "gyroAxis": "yaw",
-  "gyroInvert": true,
+  "gyroInvert": false,
   "modules": [
     "frontleft.json",
     "frontright.json",

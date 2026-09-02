@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import frc.robot.subsystems.SwerveSubsystem;
@@ -12,13 +8,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   private PS4Controller controller = new PS4Controller(0);
   private SwerveSubsystem swerve = new SwerveSubsystem();
-  private SwerveInputStream driveAngularVelocity = swerve.driveAngularVelocity(swerve, controller);
+ private final SwerveInputStream driveAngularVelocity =
+      swerve.getAngularVelocityStream(
+                () -> -controller.getLeftY() * Constants.SwerveConstants.MAX_SPEED,
+                () -> -controller.getLeftX() * Constants.SwerveConstants.MAX_SPEED,
+                () -> -controller.getRightX() * Constants.SwerveConstants.MAX_ANGULAR_SPEED)
+            .withAllianceRelativeControl();
+
   public RobotContainer() {
     configureBindings();
   }
 
   private void configureBindings() {
-    swerve.setDefaultCommand(swerve.driveRobotRelative(driveAngularVelocity));
+    swerve.setDefaultCommand(swerve.drive(driveAngularVelocity));
   }
 
   public Command getAutonomousCommand() {
