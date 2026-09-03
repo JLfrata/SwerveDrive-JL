@@ -3,13 +3,15 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import swervelib.parser.SwerveParser;
@@ -51,8 +53,15 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveInputStream getAngularVelocityStream(DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
     return new SwerveInputStream(swerveDrive, x, y, rot);
   }
+  public void drive(DoubleSupplier translationX, DoubleSupplier translationY,
+      DoubleSupplier angularRotationX) {
+          swerveDrive.setFieldRelativeChassisSpeeds(new ChassisSpeeds(
+              -translationX.getAsDouble() * Constants.SwerveConstants.MAX_SPEED,
+              -translationY.getAsDouble() * Constants.SwerveConstants.MAX_SPEED,
+              -angularRotationX.getAsDouble() * swerveDrive.getConfig().getMaximumChassisAngularVelocity().orElseThrow().in(RadiansPerSecond)));
+  }
 
-  public Command drive(SwerveInputStream stream) {
+  public Command driveFieldRelative(SwerveInputStream stream) {
     return run(() -> swerveDrive.setFieldRelativeChassisSpeeds(stream.get()));
   }
 
@@ -66,6 +75,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return swerveDrive.getPose();
+  }
+
+  public Command resetGyro() {
+    return new InstantCommand(() -> {
+      gyro.reset();
+      swerveDrive.zeroGyro();
+    });
   }
 
   public SwerveDrive getSwerveDrive() {
@@ -85,8 +101,13 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (swerveDrive != null) {
+      swerveDrive.updateTelemetry();
       field.setRobotPose(swerveDrive.getPose());
       SmartDashboard.putData("Field", field);
+      SmartDashboard.putNumber("Ângulo FL (Graus)", swerveDrive.getModuleStates()[0].angle.getDegrees());
+      SmartDashboard.putNumber("Ângulo FR (Graus)", swerveDrive.getModuleStates()[1].angle.getDegrees());
+      SmartDashboard.putNumber("Ângulo BL (Graus)", swerveDrive.getModuleStates()[2].angle.getDegrees());
+      SmartDashboard.putNumber("Ângulo BR (Graus)", swerveDrive.getModuleStates()[3].angle.getDegrees());
     }
   }
 }

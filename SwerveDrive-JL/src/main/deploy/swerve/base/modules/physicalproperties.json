@@ -10,7 +10,7 @@
     }
   },
   "statorCurrentLimit": {
-    "drive": 40,
-    "angle": 20
+    "drive": 60,
+    "angle": 40
   }
 }
