@@ -17,7 +17,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class SwerveConstants {
-    public static final double MAX_SPEED = 1.0;
-    public static final double MAX_ANGULAR_SPEED= 1 * Math.PI; 
+    public static final double MAX_SPEED = 1;
+    public static final double MAX_ANGULAR_SPEED = 180; 
   }
 }

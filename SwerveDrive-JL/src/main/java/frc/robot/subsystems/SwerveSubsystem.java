@@ -34,6 +34,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveSubsystem() {
     var cfg = new SwerveDriveConfig()
+        .withMaximumChassisSpeed(MetersPerSecond.of(Constants.SwerveConstants.MAX_SPEED), DegreesPerSecond.of(Constants.SwerveConstants.MAX_ANGULAR_SPEED))
         .withStartingPose(new Pose2d(0, 0, Rotation2d.kZero))
         .withSubsystem(this)
         .withTelemetry(TelemetryVerbosity.HIGH)
@@ -66,7 +67,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Command driveRobotRelative(SwerveInputStream stream) {
-    return run(() -> swerveDrive.setRobotRelativeChassisSpeeds(stream.get()));
+    return swerveDrive.drive(() -> ChassisSpeeds.fromRobotRelativeSpeeds(stream.get(), new Rotation2d()));
   }
 
   public void resetOdometry(Pose2d pose) {

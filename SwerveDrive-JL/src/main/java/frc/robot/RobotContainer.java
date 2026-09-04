@@ -12,9 +12,9 @@ public class RobotContainer {
   private SwerveSubsystem swerve = new SwerveSubsystem();
  private final SwerveInputStream driveAngularVelocity =
       swerve.getAngularVelocityStream(
-                () -> -controller.getLeftY() * Constants.SwerveConstants.MAX_SPEED,
-                () -> -controller.getLeftX() * Constants.SwerveConstants.MAX_SPEED,
-                () -> -controller.getRightX() * Constants.SwerveConstants.MAX_ANGULAR_SPEED)
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> -controller.getRightX())
                 .withDeadband(0.1)
                .withAllianceRelativeControl();
 
